@@ -3,8 +3,8 @@
     "version": "0.0.0",
     "description": "",
     "development": {
-        "private_key": "APrivateKey1zkpJuevUpxqSKcT9Kg4hahojBBLmphHYLWmn5S246wCDZVb",
-        "address": "aleo1m8076en5c5ylffs97t7d4jgp6luazfuz4hvt5kt4778zez79eqqs0mx70x"
+        "private_key": "APrivateKey1zkp65nHiuxjCNjqs1qCHBiXbKiRxLc1tLoAjwXPEUCTEJgH",
+        "address": "aleo1yk5l3lrk60ty6cvehlx94xwpu9deh834tpe2k70t8nketucz658sxpd0xj"
     },
     "license": "MIT"
 }

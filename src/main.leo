@@ -10,6 +10,7 @@ program token_receipt.aleo {
         amount: u64,            // The token amount.
     }
 
+    // receipt produced during consumption process
     record receipt {
         owner: address,         // The approver
         microcredits: u64,      // The Aleo balance (in microcredits).
@@ -18,19 +19,18 @@ program token_receipt.aleo {
         amount: u64,            // The token amount.
         category: u32,          // consumption type, 1-meal, 2-travel, 3-purchase, 4-medical, 5-lease, 6-transport, 7-other
         date: u32,              // date, yyyymmdd
-        //company: string,        // company
-        //dep: string,            // department
-        //use: string,            // use
+        company: address,       // company account
+        dep: u32,               // department, 1 - human resource, 2 - Administrative, 3 - market, 4 - research and development, 5 - ceo office, 6 - other
         state: u32,             // 0-approved, 1-rejected, 2-approving
     }
-	
+
+    // receipt information filled by consumter
     struct receipt_info {
-        category: u32,
-        date: u32,
-        //company: string,
-        //dep: string,
-        //use: string,
-        approver: address,
+        category: u32,          // consumption type, 1-meal, 2-travel, 3-purchase, 4-medical, 5-lease, 6-transport, 7-other
+        date: u32,              // date, yyyymmdd
+        company: address,       // company account
+        dep: u32,               // department, 1 - human resource, 2 - Administrative, 3 - market, 4 - research and development, 5 - ceo office, 6 - other
+        approver: address,      // The approver
     }
 
     /* Mint */
@@ -74,11 +74,12 @@ program token_receipt.aleo {
     }
 
     // The function `transfer_private_with_receipt` sends the specified token amount to the token receiver from the specified token record,
-    // and creates a receipt for approver
+    // and produces a receipt for approver
     // sender - token owned by sender
     // receiver - address of receiver
     // amount - amount
-    // info - receipt information filled by consumer, which describes the offline transaction
+    // info - receipt information filled by consumer, which describes the consumption process
+    // returns remaining token, token belongs to receiver, and receipt
     transition transfer_private_with_receipt(sender: token, receiver: address, amount: u64, info: receipt_info)
         -> (token, token, receipt) {
         assert_eq(self.caller, sender.owner);
@@ -111,9 +112,8 @@ program token_receipt.aleo {
             amount: amount,
             category: info.category,
             date: info.date,
-            //company: info.company,
-            //dep: info.dep,
-            //use: info.use,
+            company: info.company,
+            dep: info.dep,
             state: 2u32,            // default to approving state
         };
 
@@ -124,7 +124,8 @@ program token_receipt.aleo {
     // check receipt, approve or reject the request
     // to_check - the receipt to check validity and existence
     // next_approver - next approver if the receipt needs be checked by multiple approvers
-    // state - state of the receipt
+    // state - state of the receipt, it must be approving
+    // returns a receipt with new state, and owned by next approver
     transition check_receipt(to_check: receipt, next_approver: address, state: u32) -> receipt {
         assert_eq(self.caller, to_check.owner);
         assert_eq(to_check.state, 2u32);       // only approving state is accepted
@@ -138,16 +139,17 @@ program token_receipt.aleo {
             amount: to_check.amount,
             category: to_check.category,
             date: to_check.date,
-            //company: to_check.company,
-            //dep: to_check.dep,
-            //use: to_check.use,
+            company: to_check.company,
+            dep: to_check.dep,
             state: state,
         };
 
         return rcpt;
     }
 
-    // reimburse
+    // reimburse the receipt
+    // the state of receipt must be approved
+    // returns remaining token, and new token owned by the consumer
     transition reimburse(rcpt: receipt, sender: token) -> (token, token) {
         assert_eq(rcpt.state, 0u32); // must be approved
         assert_eq(self.caller, sender.owner);
