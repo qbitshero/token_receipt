@@ -4,7 +4,7 @@ program token_receipt.aleo {
     // and `u64` as the value.
     mapping account: address => u64;
 
-    record token {              // Note
+    record token {
         owner: address,         // The token owner.
         microcredits: u64,      // The Aleo balance (in microcredits).
         amount: u64,            // The token amount.
