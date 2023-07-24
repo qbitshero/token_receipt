@@ -1,7 +1,7 @@
 # token_receipt.aleo
 
 ## Introduction
-In the circulation of privacy coins, there is a need to address an issue of reimbursement. For example, when an employee requests reimbursement for business trips. Now, we give a solution for this issue. In this program 'token_receipt.aleo', there is a transaction 'transfer_private_with_receipt' which produces a receipt owned by approver during the reimbursement. Then the approver can check the receipt on the chain, and get a new receipt for next approver. Here let's assume there are multiple approvers involved. Continue the approving process, at last we can send 'reimburse' transaction to finish the reimbursement.
+In the circulation of privacy coins, there is a need to address an issue of reimbursement. For example, when an employee requests reimbursement for business trips. Now, we give a solution for this issue. In this program '_token_receipt.aleo_', there is a transaction '_transfer_private_with_receipt_' which produces a receipt owned by approver during the reimbursement. Then the approver can check the receipt on the chain, and get a new receipt for next approver. Here let's assume there are multiple approvers involved. Continue the approving process, at last we can send '_reimburse_' transaction to finish the reimbursement.
 
 ## Records and structs
 ```
@@ -145,13 +145,13 @@ leo run reimburse "{
 Let's suppose that, an employee has a meal in a restaurant, and he requests reimbursement for this meal to the company.
 To simplify the process, we also suppose that, the employee owns some tokens.
 
-step1: The employee fills 'receipt_info', with company, department, approver and other information. Calls 'transfer_private_with_receipt', pays the meal and gets a receipt record. The approver here is the first approver of reimbursement process in company.
+step1: The employee fills '_receipt_info_', with company, department, approver and other information. Calls '_transfer_private_with_receipt_', pays the meal and gets a receipt record. The approver here is the first approver of reimbursement process in company.
 
-step2: The approver approves the receipt, calls 'check_receipt'. If the reimbursement is rejected, the state of receipt will be set as 'rejected', and the process finish. Otherwise, the state will be set as 'approving', and a new receipt be produced owned by next approver.
+step2: The approver approves the receipt, calls '_check_receipt_'. If the reimbursement is rejected, the state of receipt will be set as '_rejected_', and the process finish. Otherwise, the state will be set as '_approving_', and a new receipt be produced owned by next approver.
 
-step3: Repeat step2 until the last approver. The state of receipt will be set as 'approved'.
+step3: Repeat step2 until the last approver. The state of receipt will be set as '_approved_'.
 
-step4: The last approver transfers token to the employee, calls 'reimburse'. Now the employee has reimbursed the meal, and the receipt can't be used next time.
+step4: The last approver transfers token to the employee, calls '_reimburse_'. Now the employee has reimbursed the meal, and the receipt can't be used next time.
 
 ## Build Guide
 
@@ -163,6 +163,7 @@ leo build
 To execute this Aleo program, run:
 ```bash
 leo run function [inputs]
+```
 
 ## Demo
 The complete demo is on <https://github.com/qbitshero/reimburse>.
